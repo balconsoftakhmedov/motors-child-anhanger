@@ -252,8 +252,8 @@ function stm_get_cart_items_new()
 // start of total price calculation
                 $total_price = 0;
                 $logic = false;
-$totalCost = calculateRentalCost( $datetime1,  $datetime2, $hour4Price, $dayPrice, $weekendPrice);
-echo "Total cost is $totalCost";
+//$totalCost = calculateRentalCost( $datetime1,  $datetime2, $hour4Price, $dayPrice, $weekendPrice);
+//echo "Total cost is $totalCost";
                 if ($weekend_days && $order_days) {
                     $price_string['price'] = intval($price_weekend) * $weekend_days;
                     if ($order_days === $weekend_days && !$order_time) {
@@ -383,25 +383,32 @@ function calculateRentalCost($pickupDate, $returnDate, $hour4Price, $dayPrice, $
     $pickupDateTime = new DateTime($pickupDate);
     $returnDateTime = new DateTime($returnDate);
 
+    $duration = $pickupDateTime->diff($returnDateTime);
+    $totalHours = $duration->days * 24 + $duration->h;
+
+    if ($totalHours <= 4) {
+        return $hour4Price;
+    }
+
     while ($pickupDateTime < $returnDateTime) {
         // определяем день недели
-        $dayOfWeek = $pickupDateTime->format('w'); // 0 (for Sunday) through 6 (for Saturday)
+        $dayOfWeek = $pickupDateTime->format('w');
 
         // определяем время суток
         $hourOfDay = (int)$pickupDateTime->format('H');
 
-        // 4-часовой тариф
-        if ($pickupDateTime->diff($returnDateTime)->h <= 4 && $pickupDateTime->diff($returnDateTime)->days == 0) {
-            $totalCost += $hour4Price;
-            break;
-        }
-
-        // выходной тариф
         if (($dayOfWeek == 5 && $hourOfDay >= 12) || $dayOfWeek == 6 || ($dayOfWeek == 0 && $hourOfDay < 9)) {
-            $pickupDateTime->modify('+24 hours');
-            $totalCost += $weekendPrice;
+            $nextInterval = new DateTime($pickupDateTime->format('Y-m-d H:i:s'));
+            $nextInterval->modify('+24 hours');
+
+            if ($nextInterval < $returnDateTime && ($returnDateTime->diff($pickupDateTime)->days * 24 + $returnDateTime->diff($pickupDateTime)->h) > 24) {
+                $pickupDateTime->modify('+24 hours');
+                $totalCost += $weekendPrice;
+            } else {
+                $totalCost += $dayPrice;
+                break;
+            }
         } else {
-            // 24-часовой тариф
             $pickupDateTime->modify('+24 hours');
             $totalCost += $dayPrice;
         }
@@ -412,5 +419,12 @@ function calculateRentalCost($pickupDate, $returnDate, $hour4Price, $dayPrice, $
 
 
 
+// Пример использования:
+$pickupDate = '2023-09-22 18:00';
+$returnDate = '2023-09-24 21:00';
+$hour4Price = 27;
+$dayPrice = 37;
+$weekendPrice = 57;
 
-//echo "Total cost is $totalCost"; // Итоговая стоимость
+$totalCost = calculateRentalCost($pickupDate, $returnDate, $hour4Price, $dayPrice, $weekendPrice);
+echo "Total cost is $totalCost"; // Итоговая стоимость
