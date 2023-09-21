@@ -1,0 +1,133 @@
+/*	
+	Theme Name: Motors - Child Theme
+	Theme URI: http://motors.stylemixthemes.com/
+	Author: StylemixThemes
+	Author URI: http://stylemixthemes.com/
+	Description: Motors Child theme
+	Version: 4.0
+	License: GNU General Public License v2 or later
+	License URI: http://www.gnu.org/licenses/gpl-2.0.html
+	Tags: blue, red, one-column, two-columns, three-columns, four-columns, left-sidebar, right-sidebar, fixed-layout, fluid-layout, responsive-layout, flexible-header, custom-background, custom-colors, custom-header, custom-menu, editor-style, sticky-post, theme-options
+	Text Domain: motors-child
+    Template: motors
+
+    This theme, like WordPress, is licensed under the GPL.
+    Use it to make something cool, have fun, and share what you've learned with others.
+*/
+
+/* Add your own styles here */
+body {
+    /*font-family: 'Open Sans', serif !important;*/
+}
+.stm-template-car_rental .stm_single_class_car .stm_rent_prices .stm_rent_price {
+    margin-top: 20px;
+}
+
+.stm-template-car_rental .stm_single_class_car .stm_rent_prices .price_item {
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.stm-template-car_rental .stm_products_grid_class .stm_product_grid_single .inner .stm_top .stm_left {
+    width: 100% !important;
+    float: none !important;
+}
+
+.stm-template-car_rental .stm_products_grid_class .stm_product_grid_single .inner .stm_top .stm_right {
+    float: none !important;
+    width: 100% !important;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.stm-template-car_rental .stm_products_grid_class .stm_product_grid_single .inner .stm_top .stm_right .single_info {
+    margin: -2px 8px 13px 0 !important;
+}
+
+.price_wr {
+    display: flex;
+    border: 1px solid #2c3e43;
+}
+
+.stm-template-car_rental .stm_products_grid_class .stm_product_grid_single .inner .stm_top .stm_left .price {
+    display: block !important;
+    padding: 5px !important;
+    background-color: transparent !important;
+    text-transform: uppercase;
+    color: #2c3e43 !important;
+    font-size: 13px !important;
+    transition: all 0.3s ease;
+    word-break: break-word;
+    width: 33.33333333%;
+}
+
+.stm-template-car_rental .stm_products_grid_class .stm_product_grid_single .inner .stm_top .stm_left .price .amount {
+    font-size: 20px !important;
+    display: block !important;
+}
+
+.stm-template-car_rental .stm_products_grid_class .stm_product_grid_single .inner .stm_top {
+    padding: 41px 10px 25px 10px !important;
+}
+
+
+
+
+.stm_sku_title {
+    display: grid !important;
+    grid-template-columns: 1fr 5.4fr;
+    align-items: center;
+    margin-bottom: 8px !important;
+}
+.stm_sku_span {
+    background: #ffde91;
+    display: inline-block;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: relative;
+    border: 1px solid #fff;
+    margin-right:  5px;
+}
+.stm_sku_span spam {
+    position: absolute;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    font-size: 17px;
+}
+
+
+.bloglogo img {
+    position: absolute;
+    top: -40px;
+    width: 200px !important;
+
+}
+.stm-layout-header-car_rental #top-bar .top-bar-info li:nth-child(2) {
+	margin-top: 1px;
+}
+
+
+.single_info.stm_single_info_font_fas:before {
+    display: none;
+}
+
+.stm-template-car_rental .stm_products_grid_class .stm_product_grid_single .inner .stm_top .stm_left .price.remove {
+    display:none !important;
+}
+
+.stm-template-car_rental .stm_single_class_car .stm_rent_prices .price_item.remove {
+    display:none !important;
+}
+
+.stm-template-car_rental .stm_products_grid_class .stm_product_grid_single .inner .stm_top .stm_left .four_price  .price .amount {
+    font-size: 16px !important;
+}
+
+.stm-template-car_rental .stm_products_grid_class .stm_product_grid_single .inner .stm_top .stm_left .price {
+    text-transform: inherit !important;
+}
+
