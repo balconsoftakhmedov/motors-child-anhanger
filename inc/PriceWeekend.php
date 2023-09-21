@@ -145,6 +145,7 @@ function stm_get_cart_items_new()
 {
     $total_sum = 0;
     $fields = stm_get_rental_order_fields_values();
+	echo '<pre>';print_r($fields);echo '</pre>';
     $cart = (!empty(WC()->cart) && !empty(WC()->cart->get_cart())) ? WC()->cart->get_cart() : '';
     $cart_items = array(
         'has_car' => false,
@@ -233,9 +234,9 @@ function stm_get_cart_items_new()
                     $startDate->modify('+1 day');
                 }
 
-                $price_four = get_post_meta($id, 'rental_price_per_hour_info', true);
-                $price_day = get_post_meta($id, 'rental_price_day_info', true);
-                $price_weekend = get_post_meta($id, 'rental_price_weekend_info', true);
+                $hour4Price = $price_four = get_post_meta($id, 'rental_price_per_hour_info', true);
+                $dayPrice = $price_day = get_post_meta($id, 'rental_price_day_info', true);
+                $weekendPrice = $price_weekend = get_post_meta($id, 'rental_price_weekend_info', true);
                 $price_week = get_post_meta($id, 'rental_price_week_info', true);
 
 
@@ -248,10 +249,11 @@ function stm_get_cart_items_new()
                 $targedTime = new DateTimeImmutable($fields['return_date']);
                 $interval = $originalTime->diff($targedTime);
                 $order_time = $interval->format("%h");
-
+// start of total price calculation
                 $total_price = 0;
                 $logic = false;
-
+$totalCost = calculateRentalCost( $datetime1,  $datetime2, $hour4Price, $dayPrice, $weekendPrice);
+echo "Total cost is $totalCost";
                 if ($weekend_days && $order_days) {
                     $price_string['price'] = intval($price_weekend) * $weekend_days;
                     if ($order_days === $weekend_days && !$order_time) {
@@ -324,6 +326,9 @@ function stm_get_cart_items_new()
                     }
                 }
 
+
+// end of total price calculation
+
                 update_post_meta($id, '_price', $total_price);
                 $product = wc_get_product($id);
 
@@ -368,6 +373,44 @@ function stm_get_cart_items_new()
             }
         }
     }
-
+echo '<pre>';print_r($cart_items);echo '</pre>';
     return $cart_items;
 }
+
+function calculateRentalCost($pickupDate, $returnDate, $hour4Price, $dayPrice, $weekendPrice) {
+    $totalCost = 0;
+
+    $pickupDateTime = new DateTime($pickupDate);
+    $returnDateTime = new DateTime($returnDate);
+
+    while ($pickupDateTime < $returnDateTime) {
+        // определяем день недели
+        $dayOfWeek = $pickupDateTime->format('w'); // 0 (for Sunday) through 6 (for Saturday)
+
+        // определяем время суток
+        $hourOfDay = (int)$pickupDateTime->format('H');
+
+        // 4-часовой тариф
+        if ($pickupDateTime->diff($returnDateTime)->h <= 4 && $pickupDateTime->diff($returnDateTime)->days == 0) {
+            $totalCost += $hour4Price;
+            break;
+        }
+
+        // выходной тариф
+        if (($dayOfWeek == 5 && $hourOfDay >= 12) || $dayOfWeek == 6 || ($dayOfWeek == 0 && $hourOfDay < 9)) {
+            $pickupDateTime->modify('+24 hours');
+            $totalCost += $weekendPrice;
+        } else {
+            // 24-часовой тариф
+            $pickupDateTime->modify('+24 hours');
+            $totalCost += $dayPrice;
+        }
+    }
+
+    return $totalCost;
+}
+
+
+
+
+//echo "Total cost is $totalCost"; // Итоговая стоимость
