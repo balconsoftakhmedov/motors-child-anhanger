@@ -354,7 +354,7 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 	if ( $totalHours <= 4 ) {
 		return $hour4Price;
 	}
-	while ( $pickupDateTime < $returnDateTime ) {
+	while ( $pickupDateTime <= $returnDateTime ) {
 
 		$dayOfWeek = $pickupDateTime->format( 'w' );
 		$hourOfDay = (int) $pickupDateTime->format( 'H' );
@@ -363,7 +363,9 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 		$dayOfW            = $nextWday->format( 'w' );
 		$hourOfD           = (int) $nextWday->format( 'H' );
 		$currenttotalHours = diff_time( $pickupDateTime, $returnDateTime );
-		echo "$dayOfW -  $hourOfD nextWday == " . $nextWday->format( 'Y-m-d H:i:s' ) . " totalHours= $currenttotalHours";
+
+
+		echo "$dayOfW -  $hourOfD pickupDateTime == " . $pickupDateTime->format( 'Y-m-d H:i:s' ) . " totalHours= $currenttotalHours";
 		if ( ( ( $dayOfWeek == 5 && $hourOfDay >= 12 ) ) && ( $currenttotalHours > 24 ) ) {
 			$nextInterval = new DateTime( $pickupDateTime->format( 'Y-m-d H:i:s' ) );
 			if ( $nextInterval <= $returnDateTime ) {
@@ -397,7 +399,7 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 
 // Пример использования:
 $pickupDate   = '2023-09-22 18:00';
-$returnDate   = '2023-09-24 17:00';
+$returnDate   = '2023-09-24 18:00';
 $hour4Price   = 27;
 $dayPrice     = 37;
 $weekendPrice = 57;
