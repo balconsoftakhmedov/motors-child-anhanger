@@ -399,7 +399,7 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 
 // Пример использования:
 $pickupDate   = '2023-09-22 18:00';
-$returnDate   = '2023-09-24 18:00';
+$returnDate   = '2023-09-25 18:00';
 $hour4Price   = 27;
 $dayPrice     = 37;
 $weekendPrice = 57;
