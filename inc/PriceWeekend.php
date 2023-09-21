@@ -390,6 +390,16 @@ function calculateRentalCost($pickupDate, $returnDate, $hour4Price, $dayPrice, $
         return $hour4Price;
     }
 
+    // Проверка на выходной тариф
+    if ($pickupDateTime->format('w') == 5 && (int)$pickupDateTime->format('H') >= 12) {
+        $weekendEnd = new DateTime($pickupDateTime->format('Y-m-d H:i:s'));
+        $weekendEnd->modify('next Sunday')->setTime(9, 0);
+
+        if ($returnDateTime >= $weekendEnd && $totalHours > 24) {
+            return $weekendPrice;
+        }
+    }
+
     while ($pickupDateTime < $returnDateTime) {
         // определяем день недели
         $dayOfWeek = $pickupDateTime->format('w');
@@ -397,21 +407,8 @@ function calculateRentalCost($pickupDate, $returnDate, $hour4Price, $dayPrice, $
         // определяем время суток
         $hourOfDay = (int)$pickupDateTime->format('H');
 
-        if (($dayOfWeek == 5 && $hourOfDay >= 12) || $dayOfWeek == 6 || ($dayOfWeek == 0 && $hourOfDay < 9)) {
-            $nextInterval = new DateTime($pickupDateTime->format('Y-m-d H:i:s'));
-            $nextInterval->modify('+24 hours');
-
-            if ($nextInterval < $returnDateTime && ($returnDateTime->diff($pickupDateTime)->days * 24 + $returnDateTime->diff($pickupDateTime)->h) > 24) {
-                $pickupDateTime->modify('+24 hours');
-                $totalCost += $weekendPrice;
-            } else {
-                $totalCost += $dayPrice;
-                break;
-            }
-        } else {
-            $pickupDateTime->modify('+24 hours');
-            $totalCost += $dayPrice;
-        }
+        $pickupDateTime->modify('+24 hours');
+        $totalCost += $dayPrice;
     }
 
     return $totalCost;
