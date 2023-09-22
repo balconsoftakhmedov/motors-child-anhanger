@@ -18,7 +18,7 @@ $csvData = <<<EOD
 "18","07.04 . , 20:26","08.04 . , 20:26","59","38","","Fr - Sa","weekend","1 day";
 "1","14.07 . , 13:00","24.07 . , 11:00","330","260","","Fr -- Mo","11x day","weekend + 4 days + 4 hours ( fr ) +
 weekend + 4 hours";
-"1","29.04.2023 08:03","30.04.2023 08:03","90","70","","Sa - So","Ek weekend","4 hours ( fr ) + weekend";
+"1","28.04.2023 08:03","30.04.2023 08:03","90","70","","Sa - So","Ek weekend","4 hours ( fr ) + weekend";
 "6a","30.06 . , 08:00","01.07 . , 08:00","42","31","","Fr - Sa","weekend","1 day";
 "10","12.05 . , 17:00","13.05 . , 17:00","80","43","","Fr - Sa","weekend","1 day";
 "9","29.04.2023 08:00","29.04.2023 17:00","62","42","","Sa","weekend","1 day";
@@ -57,7 +57,7 @@ foreach ( $dataArray as &$item ) {
 	if ( isset( $products[ strtoupper( $item["trailer"] ) ] ) ) {
 		$id           = strtoupper( $item["trailer"] );
 
-		if ( $id >0  ) {
+		if ( $id > 0   ) {
 					$prices       = $products[ strtoupper( $item["trailer"] ) ];
 		$hour4Price   = intval( $prices['4 Std.'] );
 		$dayPrice     = intval( $prices['24 Std.'] );
@@ -109,32 +109,50 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 	//stm_show ( "dayOfWeek = $dayOfWeek, pickupDateTime == " . $pickupDateTime->format( 'Y-m-d H:i:s' ) . " totalHours= $currenttotalHours" . " <br/>  ");
 		if ( ( ( $dayOfWeek == 5 && $hourOfDay >= 12 ) ) && ( $currenttotalHours > 24 ) ) {
 			$nextInterval = new DateTime( $pickupDateTime->format( 'Y-m-d H:i:s' ) );
+
+
 			if ( $nextInterval <= $returnDateTime ) {
 
 				if ($startDateTime < $pickupDateTime) {
-
 					$fdayOfWeek = $startDateTime->format( 'w' );
 					$fhourOfDay = (int) $startDateTime->format( 'H' );
 					$totalCost += $hour4Price;
-
 				}
+
 				$pickupDateTime->modify( '+48 hours' );
 				$totalCost += $weekendPrice;
 
-				stm_show (" friady hourOfDay $hourOfDay");
+				//stm_show (" friady hourOfDay $hourOfDay $weekendPrice");
 			} else {
 				$pickupDateTime->modify( '+48 hours' );
 			}
 		//	stm_show ("weekendPrice =$weekendPrice <br/> ");
+		} else if ( ( ( $dayOfWeek == 5 && (   $hourOfDay < 12  ) )) && ( $currenttotalHours > 24 ) ) {
+			$nextInterval = new DateTime( $pickupDateTime->format( 'Y-m-d H:i:s' ) );
+				if ( $nextInterval <= $returnDateTime ) {
+
+				if ($startDateTime <= $pickupDateTime) {
+					$fdayOfWeek = $startDateTime->format( 'w' );
+					$fhourOfDay = (int) $startDateTime->format( 'H' );
+					$totalCost += $hour4Price;
+				}
+
+				$pickupDateTime->modify( '+48 hours' );
+				$totalCost += $weekendPrice;
+
+			//	stm_show (" rrrr hourOfDay $hourOfDay $weekendPrice");
+			} else {
+				$pickupDateTime->modify( '+48 hours' );
+			}
 		} else if ( $dayOfWeek != 0 ) {
 
 	//	stm_show ( "<br/> r " . __LINE__ . "  dayOfWeek=" . $dayOfWeek . " <br/>  dur h =" . $duration->h . " <br/>  ");
 			if ( $currenttotalHours > 4 ) {
 				$totalCost += $dayPrice;
-				stm_show ( "day 1 " . $dayPrice . " <br/>  ");
+				//stm_show ( "day 1 " . $dayPrice . " <br/>  ");
 			} elseif ( $currenttotalHours <= 4 && $currenttotalHours > 0 ) {
 				$totalCost += $hour4Price;
-				stm_show ("hour4Price == $hour4Price <br/> ");
+				//stm_show ("hour4Price == $hour4Price <br/> ");
 			}
 
 
@@ -150,7 +168,7 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 }
 
 function stm_show ($val){
-	//echo $val." <br />";
+	echo $val." <br />";
 }
 ?>
 

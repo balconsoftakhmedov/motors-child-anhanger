@@ -131,7 +131,7 @@ add_action( 'stm_rental_meta_box', 'stm_me_rental_add_meta_box_weekend' );
 function stm_get_cart_items_new() {
 	$total_sum = 0;
 	$fields    = stm_get_rental_order_fields_values();
-	
+
 	$cart       = ( ! empty( WC()->cart ) && ! empty( WC()->cart->get_cart() ) ) ? WC()->cart->get_cart() : '';
 	$cart_items = array(
 			'has_car'      => false,
