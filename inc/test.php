@@ -57,7 +57,7 @@ foreach ( $dataArray as &$item ) {
 	if ( isset( $products[ strtoupper( $item["trailer"] ) ] ) ) {
 		$id           = strtoupper( $item["trailer"] );
 
-		if ( $id > 0   ) {
+		if ( $id > 0  && '14.07.2023 13:00' == $item["from"] ) {
 					$prices       = $products[ strtoupper( $item["trailer"] ) ];
 		$hour4Price   = intval( $prices['4 Std.'] );
 		$dayPrice     = intval( $prices['24 Std.'] );
@@ -117,12 +117,13 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 					$fdayOfWeek = $startDateTime->format( 'w' );
 					$fhourOfDay = (int) $startDateTime->format( 'H' );
 					$totalCost += $hour4Price;
+						stm_show (" friady 4hrs pay $hour4Price ");
 				}
 
 				$pickupDateTime->modify( '+48 hours' );
 				$totalCost += $weekendPrice;
 
-				//stm_show (" friady hourOfDay $hourOfDay $weekendPrice");
+				stm_show (" friady hourOfDay $hourOfDay $weekendPrice");
 			} else {
 				$pickupDateTime->modify( '+48 hours' );
 			}
@@ -140,7 +141,7 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 				$pickupDateTime->modify( '+48 hours' );
 				$totalCost += $weekendPrice;
 
-			//	stm_show (" rrrr hourOfDay $hourOfDay $weekendPrice");
+				stm_show (" rrrr hourOfDay $hourOfDay $weekendPrice");
 			} else {
 				$pickupDateTime->modify( '+48 hours' );
 			}
@@ -149,10 +150,10 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 	//	stm_show ( "<br/> r " . __LINE__ . "  dayOfWeek=" . $dayOfWeek . " <br/>  dur h =" . $duration->h . " <br/>  ");
 			if ( $currenttotalHours > 4 ) {
 				$totalCost += $dayPrice;
-				//stm_show ( "day 1 " . $dayPrice . " <br/>  ");
+				stm_show ( "day 1 " . $dayPrice . " <br/>  ");
 			} elseif ( $currenttotalHours <= 4 && $currenttotalHours > 0 ) {
 				$totalCost += $hour4Price;
-				//stm_show ("hour4Price == $hour4Price <br/> ");
+				stm_show ("hour4Price == $hour4Price <br/> ");
 			}
 
 
