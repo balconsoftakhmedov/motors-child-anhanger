@@ -131,9 +131,7 @@ add_action( 'stm_rental_meta_box', 'stm_me_rental_add_meta_box_weekend' );
 function stm_get_cart_items_new() {
 	$total_sum = 0;
 	$fields    = stm_get_rental_order_fields_values();
-	echo '<pre>';
-	print_r( $fields );
-	echo '</pre>';
+	
 	$cart       = ( ! empty( WC()->cart ) && ! empty( WC()->cart->get_cart() ) ) ? WC()->cart->get_cart() : '';
 	$cart_items = array(
 			'has_car'      => false,
@@ -220,7 +218,7 @@ function stm_get_cart_items_new() {
 // start of total price calculation
 				$total_price = 0;
 				$logic       = false;
-				$totalCost = calculateRentalCost( $datetime1,  $datetime2, $hour4Price, $dayPrice, $weekendPrice);
+				$total_price = calculateRentalCost( $fields['pickup_date'],  $fields['return_date'], $hour4Price, $dayPrice, $weekendPrice);
 /*
 				if ( $weekend_days && $order_days ) {
 					$price_string['price'] = intval( $price_weekend ) * $weekend_days;
@@ -332,9 +330,7 @@ function stm_get_cart_items_new() {
 			}
 		}
 	}
-	echo '<pre>';
-	print_r( $cart_items );
-	echo '</pre>';
+
 
 	return $cart_items;
 }
