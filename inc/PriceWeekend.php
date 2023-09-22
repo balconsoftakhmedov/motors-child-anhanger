@@ -358,14 +358,16 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 
 		$dayOfWeek = $pickupDateTime->format( 'w' );
 		$hourOfDay = (int) $pickupDateTime->format( 'H' );
-		$nextWday = new DateTime( $pickupDateTime->format( 'Y-m-d H:i:s' ) );
-		$nextWday->modify( '+48 hours' );
-		$dayOfW            = $nextWday->format( 'w' );
-		$hourOfD           = (int) $nextWday->format( 'H' );
+		//$nextWday = new DateTime( $pickupDateTime->format( 'Y-m-d H:i:s' ) );
+		//$nextWday->modify( '+48 hours' );
+		//$dayOfW            = $nextWday->format( 'w' );
+		//$hourOfD           = (int) $nextWday->format( 'H' );
+
 		$currenttotalHours = diff_time( $pickupDateTime, $returnDateTime );
 
 
-		echo "$dayOfW -  $hourOfD pickupDateTime == " . $pickupDateTime->format( 'Y-m-d H:i:s' ) . " totalHours= $currenttotalHours";
+	//	echo "$dayOfW -  $hourOfD pickupDateTime == " . $pickupDateTime->format( 'Y-m-d H:i:s' ) . " totalHours= $currenttotalHours". " <br/>  ";
+echo "pickupDateTime == " . $pickupDateTime->format( 'Y-m-d H:i:s' ) . " totalHours= $currenttotalHours". " <br/>  ";
 		if ( ( ( $dayOfWeek == 5 && $hourOfDay >= 12 ) ) && ( $currenttotalHours > 24 ) ) {
 			$nextInterval = new DateTime( $pickupDateTime->format( 'Y-m-d H:i:s' ) );
 			if ( $nextInterval <= $returnDateTime ) {
@@ -375,7 +377,16 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 				$pickupDateTime->modify( '+48 hours' );
 			}
 		} else if ( $dayOfWeek != 0 ) {
+
 			echo "<br/> r " . __LINE__ . "  dayOfWeek=" . $dayOfWeek . " <br/>  dur h =" . $duration->h . " <br/>  ";
+			if ( $currenttotalHours > 4 ){
+				$totalCost += $dayPrice;
+				echo "day 1 " . $dayPrice . " <br/>  ";
+			}elseif ( $currenttotalHours <= 4 && $currenttotalHours > 0 ){
+				$totalCost += $hour4Price;
+				echo "hour4Price == $hour4Price <br/> ";
+			}
+		/*
 			if ( $duration->h > 0 && $duration->h <= 4 ) {
 				$totalCost += $hour4Price;
 				echo "hour4Price == $hour4Price <br/> ";
@@ -386,6 +397,7 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 				$totalCost += $dayPrice;
 				echo "day 2 " . $dayPrice . " <br/>  ";
 			}
+		*/
 			$pickupDateTime->modify( '+24 hours' );
 
 		} else {
@@ -400,9 +412,14 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 // Пример использования:
 $pickupDate   = '2023-09-22 18:00';
 $returnDate   = '2023-09-25 18:00';
+
+//$pickupDate   = '10.03.2023 18:00';
+//$returnDate   = '12.03.2023 21:00';
+
 $hour4Price   = 27;
 $dayPrice     = 37;
 $weekendPrice = 57;
+
 $totalCost = calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, $weekendPrice );
 echo "Total cost is $totalCost";
 exit;
