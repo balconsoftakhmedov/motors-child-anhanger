@@ -345,12 +345,10 @@ function diff_time( $pickupDateTime, $returnDateTime ) {
 function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, $weekendPrice ) {
 	$totalCost      = 0;
 	$pickupDateTime = new DateTime( $pickupDate );
-	$startDateTime = new DateTime( $pickupDate ); ;
-
+	$startDateTime  = new DateTime( $pickupDate );;
 	$returnDateTime = new DateTime( $returnDate );
 	$duration       = $pickupDateTime->diff( $returnDateTime );
-
-	$totalHours     = diff_time( $pickupDateTime, $returnDateTime );
+	$totalHours = diff_time( $pickupDateTime, $returnDateTime );
 	if ( $totalHours <= 4 ) {
 		return $hour4Price;
 	}
@@ -358,40 +356,74 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 
 		$dayOfWeek = $pickupDateTime->format( 'w' );
 		$hourOfDay = (int) $pickupDateTime->format( 'H' );
-
 		$currenttotalHours = diff_time( $pickupDateTime, $returnDateTime );
-	//stm_show ( "dayOfWeek = $dayOfWeek, pickupDateTime == " . $pickupDateTime->format( 'Y-m-d H:i:s' ) . " totalHours= $currenttotalHours" . " <br/>  ");
+		//print_r( $dayOfWeek); echo $pickupDateTime->format( 'Y-m-d H:i:s' ) ."<br />";
+
+		//stm_show ( "dayOfWeek = $dayOfWeek, pickupDateTime == " . $pickupDateTime->format( 'Y-m-d H:i:s' ) . " totalHours= $currenttotalHours" . " <br/>  ");
 		if ( ( ( $dayOfWeek == 5 && $hourOfDay >= 12 ) ) && ( $currenttotalHours > 24 ) ) {
 			$nextInterval = new DateTime( $pickupDateTime->format( 'Y-m-d H:i:s' ) );
 			if ( $nextInterval <= $returnDateTime ) {
 
-				if ($startDateTime < $pickupDateTime) {
-
+				if ( $startDateTime < $pickupDateTime ) {
 					$fdayOfWeek = $startDateTime->format( 'w' );
 					$fhourOfDay = (int) $startDateTime->format( 'H' );
-					$totalCost += $hour4Price;
-
+					$totalCost  += $hour4Price;
+					stm_show( " friady 4hrs pay $hour4Price " );
 				}
 				$pickupDateTime->modify( '+48 hours' );
 				$totalCost += $weekendPrice;
-
-				stm_show (" friady hourOfDay $hourOfDay");
+				stm_show( " friady hourOfDay $hourOfDay $weekendPrice" );
 			} else {
 				$pickupDateTime->modify( '+48 hours' );
 			}
-		//	stm_show ("weekendPrice =$weekendPrice <br/> ");
-		} else if ( $dayOfWeek != 0 ) {
+			//	stm_show ("weekendPrice =$weekendPrice <br/> ");
+		} else if ( ( ( $dayOfWeek == 5 && ( $hourOfDay < 12 ) ) ) && ( $currenttotalHours > 0 ) ) {
+			$nextInterval = new DateTime( $pickupDateTime->format( 'Y-m-d H:i:s' ) );
+			$tem = $pickupDateTime;
+			$tem->modify( '+24 hours' );
 
-	//	stm_show ( "<br/> r " . __LINE__ . "  dayOfWeek=" . $dayOfWeek . " <br/>  dur h =" . $duration->h . " <br/>  ");
-			if ( $currenttotalHours > 4 ) {
-				$totalCost += $dayPrice;
-				stm_show ( "day 1 " . $dayPrice . " <br/>  ");
-			} elseif ( $currenttotalHours <= 4 && $currenttotalHours > 0 ) {
+			if ( $nextInterval <= $returnDateTime ) {//
+//print_r( diff_time( $tem, $pickupDateTime  ));
+				if ( $startDateTime <= $pickupDateTime ) {
+					//print_r( diff_time( $startDateTime, $pickupDateTime  ));
+					$fdayOfWeek = $startDateTime->format( 'w' );
+					$fhourOfDay = (int) $tem->format( 'H' );
+				if ($currenttotalHours > 0 && $currenttotalHours <=4 )	{
+					$totalCost  += $hour4Price;
+				}else if ($currenttotalHours > 28  ) {
+					$totalCost += $weekendPrice;
+					$totalCost  += $hour4Price;
+				}else if ($currenttotalHours > 23  ) {
+
+					$totalCost += $dayPrice;
+				}else if ($currenttotalHours > 4  ) {
+					print_r($currenttotalHours);
+					$totalCost += $weekendPrice;
+				}
+				}
+
+				$pickupDateTime->modify( '+48 hours' );
+
+			} else {
+				$pickupDateTime->modify( '+48 hours' );
+			}
+		}  else if ( $dayOfWeek == 0 ) {
+
+			if ( $currenttotalHours >= 20 && $currenttotalHours <= 24) {
 				$totalCost += $hour4Price;
-				stm_show ("hour4Price == $hour4Price <br/> ");
 			}
 
+			$pickupDateTime->modify( '+24 hours' );
 
+		} else if ( $dayOfWeek != 0 ) {
+
+			if ( $currenttotalHours > 4 ) {
+				$totalCost += $dayPrice;
+				stm_show( "day 1 " . $dayPrice . "dd <br/>  " );
+			} elseif ( $currenttotalHours <= 4 && $currenttotalHours > 0 ) {
+				$totalCost += $hour4Price;
+				stm_show( "hour4Price == $hour4Price <br/> " );
+			}
 			$pickupDateTime->modify( '+24 hours' );
 
 		} else {
