@@ -349,9 +349,13 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 	$returnDateTime = new DateTime( $returnDate );
 	$duration       = $pickupDateTime->diff( $returnDateTime );
 	$totalHours = diff_time( $pickupDateTime, $returnDateTime );
+	$payment_days =[];
 	if ( $totalHours <= 4 ) {
+		$payment_days['hour4Price'][]= 1;
 		return $hour4Price;
 	}
+
+
 	while ( $pickupDateTime <= $returnDateTime ) {
 
 		$dayOfWeek = $pickupDateTime->format( 'w' );
@@ -368,10 +372,12 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 					$fdayOfWeek = $startDateTime->format( 'w' );
 					$fhourOfDay = (int) $startDateTime->format( 'H' );
 					$totalCost  += $hour4Price;
+					$payment_days['hour4Price'][]= 1;
 					stm_show( " friady 4hrs pay $hour4Price " );
 				}
 				$pickupDateTime->modify( '+48 hours' );
 				$totalCost += $weekendPrice;
+				$payment_days['weekendPrice'][]= 1;
 				stm_show( " friady hourOfDay $hourOfDay $weekendPrice" );
 			} else {
 				$pickupDateTime->modify( '+48 hours' );
@@ -390,14 +396,18 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 					$fhourOfDay = (int) $tem->format( 'H' );
 				if ($currenttotalHours > 0 && $currenttotalHours <=4 )	{
 					$totalCost  += $hour4Price;
+					$payment_days['hour4Price'][]= 1;
 				}else if ($currenttotalHours > 28  ) {
 					$totalCost += $weekendPrice;
+					$payment_days['weekendPrice'][]= 1;
 					$totalCost  += $hour4Price;
+					$payment_days['hour4Price'][]= 1;
 				}else if ($currenttotalHours > 23  ) {
-
+$payment_days['dayPrice'][]= 1;
 					$totalCost += $dayPrice;
 				}else if ($currenttotalHours > 4  ) {
-					print_r($currenttotalHours);
+					//print_r($currenttotalHours);
+					$payment_days['weekendPrice'][]= 1;
 					$totalCost += $weekendPrice;
 				}
 				}
@@ -411,6 +421,7 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 
 			if ( $currenttotalHours >= 20 && $currenttotalHours <= 24) {
 				$totalCost += $hour4Price;
+				$payment_days['hour4Price'][]= 1;
 			}
 
 			$pickupDateTime->modify( '+24 hours' );
@@ -418,10 +429,12 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 		} else if ( $dayOfWeek != 0 ) {
 
 			if ( $currenttotalHours > 4 ) {
+				$payment_days['dayPrice'][]= 1;
 				$totalCost += $dayPrice;
 				stm_show( "day 1 " . $dayPrice . "dd <br/>  " );
 			} elseif ( $currenttotalHours <= 4 && $currenttotalHours > 0 ) {
 				$totalCost += $hour4Price;
+				$payment_days['hour4Price'][]= 1;
 				stm_show( "hour4Price == $hour4Price <br/> " );
 			}
 			$pickupDateTime->modify( '+24 hours' );
@@ -431,7 +444,13 @@ function calculateRentalCost( $pickupDate, $returnDate, $hour4Price, $dayPrice, 
 		}
 
 	}
-
+	$keysToSum = [ 'dayPrice', 'hour4Price', 'weekendPrice' ];
+	foreach ( $keysToSum as $key ) {
+		if ( isset( $payment_days[ $key ] ) && is_array( $payment_days[ $key ] ) ) {
+			$payment_days[ $key ] = array_sum( $payment_days[ $key ] );
+		}
+	}
+	
 	return $totalCost;
 }
 
