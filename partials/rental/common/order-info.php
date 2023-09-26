@@ -1,5 +1,7 @@
 <?php
-$cart_items = stm_get_cart_items_new();
+$produc_pr = stm_get_cart_items_new();
+
+$cart_items = $produc_pr;
 $car_rent   = $cart_items['car_class'];
 $id         = $car_rent['id'];
 
@@ -65,7 +67,11 @@ if ( has_post_thumbnail( $id ) ) :
         <?php
         if ( ! empty( $price_day ) ) : ?>
             <tr>
-                <td><?php echo sprintf( esc_html__( '%s Tag', 'motors' ), $car_rent['days'] ); ?></td>
+                <td><?php echo sprintf( esc_html__( '%s Tag', 'motors' ), $car_rent['days'] );
+				//echo  esc_html__( '1 Tag', 'motors' );
+				?>
+
+				</td>
                 <td>
                     <?php echo wc_price( $price_day ); ?>
                 </td>
