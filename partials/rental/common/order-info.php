@@ -11,7 +11,11 @@ $discount     = ( class_exists( 'DiscountByDays' ) ) ? DiscountByDays::get_days_
 $fixedPrice   = ( class_exists( 'PriceForQuantityDays' ) ) ? PriceForQuantityDays::get_sorted_fixed_price( $id ) : null;
 
 $price_four = get_post_meta($id, 'rental_price_per_hour_info', true);
+
 $price_day = get_post_meta($id, 'rental_price_day_info', true);
+$price_day = $car_rent['payment_days']['dayPrice'] * $price_day;
+
+
 $price_weekend = get_post_meta($id, 'rental_price_weekend_info', true);
 $price_week = get_post_meta($id, 'rental_price_week_info', true);
 
@@ -64,19 +68,21 @@ if ( has_post_thumbnail( $id ) ) :
             <td colspan="3" class="divider"></td>
         </tr>
         <!--FIXED PRICE-->
-        <?php
-        if ( ! empty( $price_day ) ) : ?>
-            <tr>
-                <td><?php echo sprintf( esc_html__( '%s Tag', 'motors' ), $car_rent['days'] );
-				//echo  esc_html__( '1 Tag', 'motors' );
-				?>
 
+		<?php if ( ! empty( $price_day ) ) : ?>
+			<tr>
+				<td>
+					<?php
+					$tag_text = ( $price_day > 1 ) ? esc_html__( 'Tage', 'motors' ) : esc_html__( 'Tag', 'motors' );
+					echo sprintf( '%s %s', $car_rent['payment_days']['dayPrice'], $tag_text );
+					?>
 				</td>
-                <td>
-                    <?php echo wc_price( $price_day ); ?>
-                </td>
-            </tr>
-        <?php endif; ?>
+				<td>
+					<?php echo wc_price( $price_day ); ?>
+				</td>
+			</tr>
+		<?php endif; ?>
+
         <?php if ( ! empty( $price_four  && $price_four != '-') ) : ?>
             <tr>
 

@@ -219,6 +219,7 @@ function stm_get_cart_items_new() {
 				$total_price = 0;
 				$logic       = false;
 				$total_price = calculateRentalCost( $fields['pickup_date'],  $fields['return_date'], $hour4Price, $dayPrice, $weekendPrice)['totalCost'];
+				$payment_days = calculateRentalCost( $fields['pickup_date'],  $fields['return_date'], $hour4Price, $dayPrice, $weekendPrice)['payment_days'];
 /*
 				if ( $weekend_days && $order_days ) {
 					$price_string['price'] = intval( $price_weekend ) * $weekend_days;
@@ -313,6 +314,7 @@ function stm_get_cart_items_new() {
 						'payment_method' => get_post_meta( $variation_id, '_stm_payment_method', true ),
 						'days'           => $fields['order_days'],
 						'ceil_days'      => $fields['ceil_days'],
+						'payment_days' => $payment_days,
 						'oldData'        => $cart_old_data,
 				);
 				$cart_items['has_car'] = true;
@@ -331,7 +333,7 @@ function stm_get_cart_items_new() {
 		}
 	}
 
-
+//echo '<pre>'; print_r($cart_items); print_r($payment_days); echo '</pre>';
 	return $cart_items;
 }
 
