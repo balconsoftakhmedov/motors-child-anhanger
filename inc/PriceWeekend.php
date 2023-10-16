@@ -143,7 +143,9 @@ function stm_get_cart_items_new() {
 			'option_ids'   => array(),
 			'oldData'      => 0,
 	);
+
 	if ( ! empty( $cart ) ) {
+
 
 		$cart_old_data = ( isset( $_GET['order_old_days'] ) && ! empty( intval( $_GET['order_old_days'] ) ) ) ? intval( $_GET['order_old_days'] ) : 0;
 		foreach ( $cart as $cart_item ) {
@@ -333,7 +335,7 @@ function stm_get_cart_items_new() {
 		}
 	}
 
-//echo '<pre>'; print_r($cart_items); print_r($payment_days); echo '</pre>';
+//echo '<pre>'; print_r($cart_items); print_r($payment_days);print_r($cart); echo '</pre>';
 	return $cart_items;
 }
 

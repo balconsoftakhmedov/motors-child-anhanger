@@ -1,6 +1,11 @@
 <?php
 
-$produc_pr = stm_get_cart_items_new();
+
+$order_id = stm_get_order_id();
+$stm_rental_order_full = (!empty($order_id))? get_post_meta( $order_id, 'order_car_data_full',true ): '';
+$produc_pr = (!empty($stm_rental_order_full)) ? $stm_rental_order_full : stm_get_cart_items_new();
+
+
 $cart_items = $produc_pr;
 $car_rent   = $cart_items['car_class'];
 $id         = $car_rent['id'];

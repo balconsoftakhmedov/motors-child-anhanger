@@ -75,3 +75,20 @@ function stm_rental__new_template() {
 
 
 add_action('init','stm_rental__new_template', 99);
+
+add_action( 'woocommerce_new_order', 'stm_order_fields_child', 99 );
+function stm_order_fields_child( $order_id ) {
+    if ( is_admin() ) {
+        return false;
+    }
+    $cart_items = stm_get_cart_items();
+	$cart_items_data = stm_get_cart_items_new();
+    $date       = stm_get_rental_order_fields_values();
+    update_post_meta( $order_id, 'order_car', $cart_items );
+	update_post_meta( $order_id, 'order_car_data_full', $cart_items_data );
+    update_post_meta( $order_id, 'order_car_date', $date );
+    update_post_meta( $order_id, 'order_pickup_date', $date['pickup_date'] );
+    update_post_meta( $order_id, 'order_pickup_location', $date['pickup_location'] );
+    update_post_meta( $order_id, 'order_drop_date', $date['return_date'] );
+    update_post_meta( $order_id, 'order_drop_location', $date['return_location'] );
+}
