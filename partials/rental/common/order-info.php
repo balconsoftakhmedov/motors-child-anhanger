@@ -9,10 +9,19 @@ $pricePerHour = get_post_meta( $id, 'rental_price_per_hour_info', true );
 $discount     = ( class_exists( 'DiscountByDays' ) ) ? DiscountByDays::get_days_post_meta( $id ) : null;
 $fixedPrice   = ( class_exists( 'PriceForQuantityDays' ) ) ? PriceForQuantityDays::get_sorted_fixed_price( $id ) : null;
 $price_four = get_post_meta( $id, 'rental_price_per_hour_info', true );
+$four_hr = (!empty($car_rent['payment_days']['hour4Price']))? $car_rent['payment_days']['hour4Price']:0 ;
+
+$dayPrice = (!empty($car_rent['payment_days']['dayPrice']))? $car_rent['payment_days']['dayPrice']:0 ;
 $price_day = get_post_meta( $id, 'rental_price_day_info', true );
-$price_day = $car_rent['payment_days']['dayPrice'] * $price_day;
+$price_day = $dayPrice * $price_day;
+
+$weekendPrice = (!empty($car_rent['payment_days']['weekendPrice']))? $car_rent['payment_days']['weekendPrice']:0 ;
 $price_weekend = get_post_meta( $id, 'rental_price_weekend_info', true );
+$price_weekend = $price_weekend * $weekendPrice;
+
+
 $price_week    = get_post_meta( $id, 'rental_price_week_info', true );
+
 $fields = stm_get_rental_order_fields_values();
 $datetime1  = new DateTime( $fields['pickup_date'] );
 $datetime2  = new DateTime( $fields['return_date'] );
@@ -48,7 +57,7 @@ if ( has_post_thumbnail( $id ) ) :
 	<table>
 		<thead class="heading-font">
 		<tr>
-			<td><?php esc_html_e( 'QTY', 'motors' ); ?></td>
+			<td colspan="2"><?php esc_html_e( 'QTY', 'motors' ); ?></td>
 			<td><?php esc_html_e( 'Rate', 'motors' ); ?></td>
 		</tr>
 		</thead>
@@ -60,9 +69,9 @@ if ( has_post_thumbnail( $id ) ) :
 
 		<?php if ( ! empty( $price_day ) ) : ?>
 			<tr>
-				<td>
+				<td colspan="2">
 					<?php
-					$tag_text = ( $price_day > 1 ) ? esc_html__( 'Tage', 'motors' ) : esc_html__( 'Tag', 'motors' );
+					$tag_text = ( $car_rent['payment_days']['dayPrice'] > 1 ) ? esc_html__( 'Tage', 'motors' ) : esc_html__( 'Tag', 'motors' );
 					echo sprintf( '%s %s', $car_rent['payment_days']['dayPrice'], $tag_text );
 					?>
 				</td>
@@ -72,10 +81,14 @@ if ( has_post_thumbnail( $id ) ) :
 			</tr>
 		<?php endif; ?>
 
-		<?php if ( ! empty( $price_four && $price_four != '-' ) ) : ?>
+		<?php if ( ! empty( $four_hr )) : ?>
 			<tr>
-
-				<td><?php echo esc_html__( '4 Stunden', 'motors' ); ?></td>
+				<td colspan="2">
+				<?php
+					$tag_text = ( $four_hr > 1 ) ? esc_html__( 'Stunden', 'motors' ) : esc_html__( 'Stunde', 'motors' );
+					echo sprintf( '%s %s', $four_hr, $tag_text );
+					?>
+				</td>
 				<td>
 					<?php echo wc_price( $price_four ); ?>
 				</td>
@@ -84,7 +97,13 @@ if ( has_post_thumbnail( $id ) ) :
 
 		<?php if ( ! empty( $price_weekend ) ) : ?>
 			<tr>
-				<td><?php echo esc_html__( 'Wochenende', 'motors' ); ?></td>
+				<td colspan="2">
+
+					<?php
+					$tag_text = ( $car_rent['payment_days']['weekendPrice'] > 1 ) ? esc_html__( 'Wochenenden', 'motors' ) : esc_html__( 'Wochenende', 'motors' );
+					echo sprintf( '%s %s', $car_rent['payment_days']['weekendPrice'], $tag_text );
+					?>
+				</td>
 				<td>
 					<?php echo wc_price( $price_weekend ); ?>
 				</td>
@@ -105,7 +124,7 @@ if ( has_post_thumbnail( $id ) ) :
 		<tfoot class="heading-font">
 		<tr>
 			<td colspan="2"><?php esc_html_e( 'Rental Charges Rate', 'motors' ); ?></td>
-			<td><?php echo wc_price( intval( $total ) ); ?></td>
+			<td style="padding: 0px 8px;"><?php echo wc_price( intval( $total ) ); ?></td>
 		</tr>
 		</tfoot>
 	</table>
