@@ -67,7 +67,7 @@ if ( $offices->have_posts() ) : ?>
 
 
             <div class="stm_product_grid_single">
-                <a href="<?php echo esc_url( stm_woo_shop_page_url() . $paginationWrapper . esc_attr( '#product-' . get_the_ID() ) ) ?> " class="inner">
+                <a href="" class="inner stm-notclick">
 
                     <div class="stm_top clearfix">
                         <div class="stm_left heading-font">

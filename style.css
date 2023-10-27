@@ -131,3 +131,7 @@ body {
     text-transform: inherit !important;
 }
 
+a.stm-notclick {
+    cursor: unset;
+}
+

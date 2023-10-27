@@ -220,8 +220,9 @@ function stm_get_cart_items_new() {
 // start of total price calculation
 				$total_price = 0;
 				$logic       = false;
-				$total_price = calculateRentalCost( $fields['pickup_date'],  $fields['return_date'], $hour4Price, $dayPrice, $weekendPrice)['totalCost'];
-				$payment_days = calculateRentalCost( $fields['pickup_date'],  $fields['return_date'], $hour4Price, $dayPrice, $weekendPrice)['payment_days'];
+				$ttpr = calculateRentalCost( $fields['pickup_date'],  $fields['return_date'], $hour4Price, $dayPrice, $weekendPrice);
+				$total_price = (!empty($ttpr['totalCost']))?$ttpr['totalCost']: 0;
+				$payment_days = (!empty($ttpr['payment_days']))?$ttpr['payment_days']:0;
 /*
 				if ( $weekend_days && $order_days ) {
 					$price_string['price'] = intval( $price_weekend ) * $weekend_days;

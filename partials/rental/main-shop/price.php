@@ -145,8 +145,9 @@ if (!empty($product)) :
         if (!empty($fields['order_days'])) {
             $total_price = $product->get_price();
         }
-
-        $url = add_query_arg($gets, get_permalink($stm_id));
+$ur =  wc_get_checkout_url();
+//$ur = 		get_permalink($stm_id);
+        $url = add_query_arg($gets, $ur);
         if ((!empty($price_four) || !empty($price_day) || !empty($price_weekend) || !empty($price_week)) && $url) :
             ?>
             <div class="stm_rent_prices">

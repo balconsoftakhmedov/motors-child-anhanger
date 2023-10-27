@@ -1,5 +1,6 @@
 <?php
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 add_action( 'wp_enqueue_scripts', 'stm_enqueue_parent_styles' );
 
