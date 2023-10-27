@@ -68,6 +68,49 @@ function stm_rental__new_template() {
                 ),
             )
         );
+
+				vc_map(
+				array(
+					'name'     => __( 'STM Rent Car Form', 'motors-wpbakery-widgets' ),
+					'base'     => 'stm_rent_car_form',
+					'category' => __( 'STM', 'motors-wpbakery-widgets' ),
+					'html_template' => get_template_directory() . '-child/vc_templates/stm_rent_car_form_child.php',
+					'params'   => array(
+						array(
+							'type'       => 'textfield',
+							'heading'    => __( 'Set working hours. example: 9-18', 'motors-wpbakery-widgets' ),
+							'param_name' => 'office_working_hours',
+						),
+						array(
+							'type'       => 'dropdown',
+							'heading'    => __( 'Style', 'motors-wpbakery-widgets' ),
+							'param_name' => 'style',
+							'value'      => array(
+								__( 'Style 1', 'motors-wpbakery-widgets' ) => 'style_1',
+								__( 'Style 2', 'motors-wpbakery-widgets' ) => 'style_2',
+							),
+							'std'        => 'style_1',
+						),
+						array(
+							'type'       => 'dropdown',
+							'heading'    => __( 'Align', 'motors-wpbakery-widgets' ),
+							'param_name' => 'align',
+							'value'      => array(
+								__( 'Left', 'motors-wpbakery-widgets' )   => 'text-left',
+								__( 'Center', 'motors-wpbakery-widgets' ) => 'text-center',
+								__( 'Right', 'motors-wpbakery-widgets' )  => 'text-right',
+							),
+							'std'        => 'text-right',
+						),
+						array(
+							'type'       => 'css_editor',
+							'heading'    => __( 'CSS', 'motors-wpbakery-widgets' ),
+							'param_name' => 'css',
+							'group'      => __( 'Design options', 'motors-wpbakery-widgets' ),
+						),
+					),
+				)
+			);
     }
 
 }
