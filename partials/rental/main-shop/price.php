@@ -183,7 +183,7 @@ $ur =  wc_get_checkout_url();
                                 </a>
                             <?php } else { ?>
                                 <?php
-                                if ($price_four == '-' && $order_hour < 5 && $order_days == 0) { ?>
+                                if ((($price_four == '-' && $order_hour < 5) || ($price_four > 0 && $order_hour < 5)) && $order_days == 0) { ?>
                                     <a class="heading-font" href="/reservation" style="padding: 0px 10px ">
                                         <?php esc_html_e('Mindestgrenze 5 Stunden', 'motors'); ?>
                                     </a>
