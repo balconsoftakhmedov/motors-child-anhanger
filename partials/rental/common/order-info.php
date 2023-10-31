@@ -90,7 +90,7 @@ if ( has_post_thumbnail( $id ) ) :
 			<tr>
 				<td colspan="2">
 				<?php
-					$tag_text = ( $four_hr > 1 ) ? esc_html__( 'Stunden', 'motors' ) : esc_html__( 'Stunde', 'motors' );
+					$tag_text = ( $four_hr > 1 ) ? esc_html__( '4-Std.-Tarif', 'motors-child' ) : esc_html__( '4-Std.-Tarif', 'motors-child' );
 					echo sprintf( '%s %s', $four_hr, $tag_text );
 					?>
 				</td>
