@@ -9,5 +9,6 @@
     <orderEntry type="module" module-name="motors-wpbakery-widgets" />
     <orderEntry type="module" module-name="stm-motors-extends" />
     <orderEntry type="module" module-name="stm-post-type" />
+    <orderEntry type="module" module-name="woocommerce" />
   </component>
 </module>

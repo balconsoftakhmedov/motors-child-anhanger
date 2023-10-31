@@ -127,10 +127,11 @@ if ( has_post_thumbnail( $id ) ) :
 		</tr>
 		</tbody>
 		<tfoot class="heading-font">
-		<tr>
+		<!-- <tr>
 			<td colspan="2"><?php esc_html_e( 'Rental Charges Rate', 'motors' ); ?></td>
 			<td style="padding: 0px 8px;"><?php echo wc_price( intval( $total ) ); ?></td>
 		</tr>
+		!-->
 		</tfoot>
 	</table>
 </div>

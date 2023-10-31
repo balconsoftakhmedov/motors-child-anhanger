@@ -133,5 +133,6 @@ body {
 
 a.stm-notclick {
     cursor: unset;
+    pointer-events: none;
 }
 
