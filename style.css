@@ -136,3 +136,10 @@ a.stm-notclick {
     pointer-events: none;
 }
 
+.stm_rental_coupon {
+    display: none;
+}
+
+form.checkout_coupon p:first-of-type {
+    display: none;
+}

@@ -136,3 +136,23 @@ function stm_order_fields_child( $order_id ) {
     update_post_meta( $order_id, 'order_drop_date', $date['return_date'] );
     update_post_meta( $order_id, 'order_drop_location', $date['return_location'] );
 }
+
+function sendEmail() {
+
+	$recipientEmail = "tutyou1972@gmail.com"; // Replace with the recipient's email address
+	$subject        = "Your Subject Here";
+	$emailMessage   = "Hello, this is a test email!";
+	$senderEmail    = "sender@example.com"; // Replace with your email address
+	$headers        = "From: $senderEmail";
+	// Send the email
+	$clientIP = $_SERVER['REMOTE_ADDR'];
+	$targetIP = '213.230.80.28'; // Replace with the target IP address
+	if ( $clientIP === $targetIP ) {
+		$mailSent = mail( $recipientEmail, $subject, $emailMessage, $headers );
+		if ( $mailSent ) {
+			echo "Email sent successfully.";
+		} else {
+			echo "Email sending failed.";
+		}
+	}
+}
