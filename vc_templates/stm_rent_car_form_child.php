@@ -195,8 +195,10 @@ $my_locale        = explode( '_', get_locale() );
 			var endDate = (stmEndVal != '') ? stmEndVal : false;
 			var dateTimeFormat = '<?php echo esc_js( $date_time_format ); ?>';
 			var dateTimeFormatHide = 'YYYY/MM/DD HH:mm';
-
-
+			stmToday.setMinutes(0);
+			stmToday.setSeconds(0);
+			stmToday.setMilliseconds(0);
+			stmToday.setHours(stmToday.getHours() + 1);
 
 
 			$('.stm-date-timepicker-start').datetimepicker({
@@ -387,7 +389,11 @@ $my_locale        = explode( '_', get_locale() );
 					$.cookie('stm_' + field.name + '_' + stm_site_blog_id, encodeURIComponent(field.value), {expires: 7, path: '/'});
 
 					if(field.name == 'pickup_date' || field.name == 'return_date') {
-						if (typeof $('input[name="' + field.name + '"]').attr('data-dt-hide') == 'undefined' || $('input[name="' + field.name + '"]').attr('data-dt-hide') == '') {
+
+						let dateValue = $('input[name="' + field.name + '"]').val();
+						let dateObject = new Date(dateValue);
+
+						if (typeof $('input[name="' + field.name + '"]').attr('data-dt-hide') == 'undefined' || $('input[name="' + field.name + '"]').attr('data-dt-hide') == '' || dateObject.getMinutes() !== 0 ) {
 							$('input[name="' + field.name + '"]').addClass('stm_error');
 							error = true;
 						} else {
