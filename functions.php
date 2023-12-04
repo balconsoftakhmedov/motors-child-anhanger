@@ -156,3 +156,27 @@ function sendEmail() {
 		}
 	}
 }
+
+function get_formatted_dates($date) {
+	$date_time_string = $date;
+	if ( preg_match( '/^\d{4}-\d{2}-\d{2}\d{4}$/', $date_time_string ) ) {
+		$date = DateTime::createFromFormat( 'Y-m-dHi', $date_time_string )->format( 'Y-m-d H:i' );
+	}
+	return $date;
+}
+
+function stm_custom_modify_order_info($order_info) {
+
+    if ( ! empty( $fields['pickup_date'] ) ) {
+        $order_info['pickup']['content'] .= get_formatted_dates($fields['pickup_date']);
+    }
+
+    if ( ! empty( $fields['return_date'] ) ) {
+        $order_info['dropoff']['content'] .= get_formatted_dates($fields['return_date']);
+    }
+
+    return $order_info;
+}
+
+
+add_filter('stm_rental_order_info', 'stm_custom_modify_order_info');

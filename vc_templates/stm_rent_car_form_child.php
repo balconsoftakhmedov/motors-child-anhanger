@@ -40,15 +40,8 @@ $date_format      = ( preg_match_all( '/[d].[m].[yY]/', $date_format ) ) ? 'm/d/
 $date_time_format = 'Y-m-d H:i';
 $my_locale        = explode( '_', get_locale() );
 
-$date_time_string = $fields['pickup_date'];
-if ( preg_match( '/^\d{4}-\d{2}-\d{2}\d{4}$/', $date_time_string ) ) {
-	$fields['pickup_date'] = DateTime::createFromFormat( 'Y-m-dHi', $date_time_string )->format( 'Y-m-d H:i' );
-}
-$date_time_string = $fields['return_date'];
-if ( preg_match( '/^\d{4}-\d{2}-\d{2}\d{4}$/', $date_time_string ) ) {
-	$fields['return_date'] = DateTime::createFromFormat( 'Y-m-dHi', $date_time_string )->format( 'Y-m-d H:i' );
-}
-
+$fields['pickup_date'] = get_formatted_dates($fields['pickup_date']);
+$fields['return_date'] = get_formatted_dates($fields['return_date']);
 ?>
 
 <div class="stm_rent_car_form_wrapper <?php echo esc_attr( $style_type . ' ' . $align . ' ' . $css_class ); ?>">
