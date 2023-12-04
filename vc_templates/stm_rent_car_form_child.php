@@ -39,6 +39,16 @@ $time_format      = 'H:i';
 $date_format      = ( preg_match_all( '/[d].[m].[yY]/', $date_format ) ) ? 'm/d/Y' : $date_format;
 $date_time_format = 'Y-m-d H:i';
 $my_locale        = explode( '_', get_locale() );
+
+$date_time_string = $fields['pickup_date'];
+if ( preg_match( '/^\d{4}-\d{2}-\d{2}\d{4}$/', $date_time_string ) ) {
+	$fields['pickup_date'] = DateTime::createFromFormat( 'Y-m-dHi', $date_time_string )->format( 'Y-m-d H:i' );
+}
+$date_time_string = $fields['return_date'];
+if ( preg_match( '/^\d{4}-\d{2}-\d{2}\d{4}$/', $date_time_string ) ) {
+	$fields['return_date'] = DateTime::createFromFormat( 'Y-m-dHi', $date_time_string )->format( 'Y-m-d H:i' );
+}
+
 ?>
 
 <div class="stm_rent_car_form_wrapper <?php echo esc_attr( $style_type . ' ' . $align . ' ' . $css_class ); ?>">
@@ -59,6 +69,7 @@ $my_locale        = explode( '_', get_locale() );
 				<div class="stm_date_time_input">
 					<h4 class="stm_form_title"><?php esc_html_e( 'Pick-up Date/Time*', 'motors' ); ?></h4>
 					<div class="stm_date_input">
+
 						<input type="text" value="<?php echo esc_attr( $fields['pickup_date'] ); ?>" class="stm-date-timepicker-start" name="pickup_date" placeholder="<?php esc_attr_e( 'Pickup Date', 'motors' ); ?>" required readonly
 							<?php echo ( ! empty( $fields['pickup_date'] ) ) ? 'data-dt-hide="' . esc_attr( $fields['calc_pickup_date'] ) . '"' : ''; ?>
 						/>
@@ -195,6 +206,7 @@ $my_locale        = explode( '_', get_locale() );
 			var endDate = (stmEndVal != '') ? stmEndVal : false;
 			var dateTimeFormat = '<?php echo esc_js( $date_time_format ); ?>';
 			var dateTimeFormatHide = 'YYYY/MM/DD HH:mm';
+
 			stmToday.setMinutes(0);
 			stmToday.setSeconds(0);
 			stmToday.setMilliseconds(0);
@@ -372,7 +384,7 @@ $my_locale        = explode( '_', get_locale() );
 
 				return false;
 			});
-
+console.log('eeee');
 			/*Set cookie with order data*/
 			$('.stm_rent_car_form form').on('submit', function (e) {
 				var error = false;
@@ -383,6 +395,7 @@ $my_locale        = explode( '_', get_locale() );
 				if($.cookie('stm_pickup_date_' + stm_site_blog_id) != null) {
 					$.cookie('stm_pickup_date_old_' + stm_site_blog_id, $.cookie('stm_pickup_date_' + stm_site_blog_id), {expires: 7, path: '/'});
 					$.cookie('stm_return_date_old_' + stm_site_blog_id, $.cookie('stm_return_date_' + stm_site_blog_id), {expires: 7, path: '/'});
+					console.log($.cookie('stm_pickup_date_' + stm_site_blog_id));
 				}
 
 				$.each($(this).serializeArray(), function (i, field) {
@@ -395,6 +408,7 @@ $my_locale        = explode( '_', get_locale() );
 
 						if (typeof $('input[name="' + field.name + '"]').attr('data-dt-hide') == 'undefined' || $('input[name="' + field.name + '"]').attr('data-dt-hide') == '' || dateObject.getMinutes() !== 0 ) {
 							$('input[name="' + field.name + '"]').addClass('stm_error');
+							console.log('error', $('input[name="' + field.name + '"]').attr('data-dt-hide'));
 							error = true;
 						} else {
 							$('input[name="' + field.name + '"]').removeClass('stm_error');
