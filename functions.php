@@ -165,18 +165,19 @@ function get_formatted_dates($date) {
 	return $date;
 }
 
-function stm_custom_modify_order_info($order_info) {
+function stm_custom_modify_order_info( $order_info ) {
+	if ( ! empty( $order_info['pickup_date'] ) ) {
+		$order_info['pickup_date'] = get_formatted_dates( $order_info['pickup_date'] );
+	}
+	if ( ! empty( $order_info['return_date'] ) ) {
+		$order_info['return_date'] = get_formatted_dates( $order_info['return_date'] );
+	}
 
-    if ( ! empty( $fields['pickup_date'] ) ) {
-        $order_info['pickup']['content'] .= get_formatted_dates($fields['pickup_date']);
-    }
-
-    if ( ! empty( $fields['return_date'] ) ) {
-        $order_info['dropoff']['content'] .= get_formatted_dates($fields['return_date']);
-    }
-
-    return $order_info;
+	return $order_info;
 }
 
+function stm_init_hook_function() {
+	add_filter( 'stm_rental_date_values', 'stm_custom_modify_order_info', 99, 1 );
+}
 
-add_filter('stm_rental_order_info', 'stm_custom_modify_order_info');
+add_action( 'init', 'stm_init_hook_function' );
