@@ -43,7 +43,7 @@ $datetime1 = new DateTime($fields['pickup_date']);
 $datetime2 = new DateTime($fields['return_date']);
 $difference = $datetime1->diff($datetime2);
 $order_days = $difference->d;
-$order_hour = $difference->format("%h)");
+$order_hour = $difference->format("%h");
 
 $originalTime = new DateTimeImmutable($fields['pickup_date']);
 $targedTime = new DateTimeImmutable($fields['return_date']);
@@ -183,6 +183,13 @@ $ur =  wc_get_checkout_url();
                                 </a>
                             <?php } else { ?>
                                 <?php
+
+								$message = [
+										'$order_hour' => $order_hour,
+									'$price_four' => $price_four,
+									'$order_days' => $order_days,
+								];
+								flance_write_log($message);
                                 if ((($price_four == '-' && $order_hour < 5) || ($price_four > 0 && $order_hour < 5)) && $order_days == 0) { ?>
                                     <a class="heading-font" href="/reservation" style="padding: 0px 10px ">
                                         <?php esc_html_e('Mindestgrenze 5 Stunden', 'motors'); ?>

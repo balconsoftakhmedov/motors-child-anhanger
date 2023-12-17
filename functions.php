@@ -187,11 +187,11 @@ function flance_write_log( $message, $file = 'logs/logfile.log' ) {
 	ob_start();
 	print_r( $message );
 	$message         = ob_get_clean();
-	$theme_directory = FLANCE_DOORDASH_PLUGIN_DIR;
+	$theme_directory = get_stylesheet_directory();
 	$log_file_path = $theme_directory . '/' . $file;
 	$log_directory = dirname( $log_file_path );
 	if ( ! file_exists( $log_directory ) ) {
 		mkdir( $log_directory, 0755, true );
 	}
-	file_put_contents( $log_file_path, date( 'Y-m-d H:i:s' ) . ' ' . $message . "\n", FILE_APPEND | LOCK_EX );
+	file_put_contents( $log_file_path, date( 'Y-m-d H:i:s' ) . ' ' . $message . "\n",  LOCK_EX );
 }
